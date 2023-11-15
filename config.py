@@ -1,6 +1,6 @@
-# config.py
+# /your_project/config.py
 class Config:
-    LOG_FILE = '../../api.log'
+    LOG_FILE = 'logs/api.log'
     LOG_LEVEL = 'DEBUG'
 
     @staticmethod

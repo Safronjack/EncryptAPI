@@ -1,5 +1,5 @@
-# models.py
-from app import db
+# /your_project/api/models/models.py
+from app.app import db
 
 
 class LogEntry(db.Model):

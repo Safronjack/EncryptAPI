@@ -1,13 +1,9 @@
-# resources.py
-from flask import abort, Blueprint
+# /your_project/api/resources/base_resource.py
+from flask import abort
 from flask_restful import Resource, reqparse
 from cryptography.fernet import Fernet
-from app import db
-from app.models.models import LogEntry
-
-
-api_blueprint = Blueprint('api', __name__)
-
+from api.models.models import LogEntry
+from app.app import db  # Импортируем db из приложения
 
 class BaseResource(Resource):
     ERROR_TEXT_NOT_PROVIDED = "Text not provided."
@@ -23,7 +19,7 @@ class BaseResource(Resource):
         try:
             cipher_suite = Fernet(token)
             result_text = operation(cipher_suite, text.encode())
-            return result_text
+            return result_text.decode()
         except Exception as e:
             error_message = f"Internal Server Error: {str(e)}"
             self.log_error(error_message)
@@ -51,39 +47,3 @@ class BaseResource(Resource):
             return parser.parse_args()
         except Exception as e:
             self.abort_with_error(f"Error parsing arguments: {str(e)}", 400)
-
-
-@api_blueprint.route('/token')
-class TokenResource(BaseResource):
-    def get(self):
-        token_key = Fernet.generate_key()
-        cipher_suite = Fernet(token_key)
-        return {'token': token_key.decode()}, 200
-
-
-@api_blueprint.route('/encrypt')
-class EncryptionResource(BaseResource):
-    def post(self):
-        args = self.parse_args()
-        encrypted_text = self.process_text(args['text'], args['token'], Fernet.encrypt)
-        return {"encrypted_text": encrypted_text.decode()}, 200
-
-
-@api_blueprint.route('/decrypt')
-class DecryptionResource(BaseResource):
-    def post(self):
-        args = self.parse_args()
-        decrypted_text = self.process_text(args['text'], args['token'], Fernet.decrypt)
-        return {"decrypted_text": decrypted_text.decode()}, 200
-
-
-@api_blueprint.route('/log')
-class LogResource(BaseResource):
-    def get(self):
-        logs = LogEntry.query.all()
-        return {'logs': [{'message': log.message, 'level': log.level} for log in logs]}, 200
-
-    def delete(self):
-        LogEntry.query.delete()
-        db.session.commit()
-        return {'message': 'Log cleared successfully'}, 200

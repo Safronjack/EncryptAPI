@@ -99,7 +99,7 @@ class TestLogResource(unittest.TestCase):
         self.api.add_resource(LogResource, '/log')
 
     def test_view_logs(self):
-        with open('../api.log', 'w') as log_file:
+        with open('../logs/api.log', 'w') as log_file:
             log_file.write('Sample log entry')
         with self.app.test_client() as client:
             response = client.get('/log')
@@ -107,13 +107,13 @@ class TestLogResource(unittest.TestCase):
             self.assertIn('Sample log entry', response.json['logs'])
 
     def test_clear_logs(self):
-        with open('../api.log', 'w') as log_file:
+        with open('../logs/api.log', 'w') as log_file:
             log_file.write('Sample log entry')
         with self.app.test_client() as client:
             response = client.delete('/log')
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.json, {'message': 'Log cleared successfully'})
-        with open('../api.log', 'r') as log_file:
+        with open('../logs/api.log', 'r') as log_file:
             logs = log_file.read()
             self.assertEqual(logs, '')
 
