@@ -1,4 +1,4 @@
-# /your_project/api/models/models.py
+# /your_project/api/models/log_entry.py
 from app.app import db
 
 

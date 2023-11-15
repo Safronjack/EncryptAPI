@@ -2,8 +2,9 @@
 from flask import abort
 from flask_restful import Resource, reqparse
 from cryptography.fernet import Fernet
-from api.models.models import LogEntry
+from api.models.log_entry import LogEntry
 from app.app import db  # Импортируем db из приложения
+
 
 class BaseResource(Resource):
     ERROR_TEXT_NOT_PROVIDED = "Text not provided."

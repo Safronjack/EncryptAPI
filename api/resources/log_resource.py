@@ -1,7 +1,7 @@
 # /your_project/api/resources/log_resource.py
 from .base_resource import BaseResource
 from app.app import db
-from api.models.models import LogEntry
+from api.models.log_entry import LogEntry
 from .. import api_blueprint
 
 

@@ -1,6 +1,5 @@
 # /your_project/api/resources/encryption_resource.py
 from cryptography.fernet import Fernet
-
 from .base_resource import BaseResource
 from .. import api_blueprint
 
