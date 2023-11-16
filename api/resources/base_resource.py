@@ -1,35 +1,33 @@
 # /your_project/api/resources/base_resource.py
-from flask import abort
+from flask import abort, jsonify, request, make_response
 from flask_restful import Resource, reqparse
 from cryptography.fernet import Fernet
+from werkzeug.exceptions import HTTPException
 
 
 class BaseResource(Resource):
     """
-        Base class for API resources providing common functionality.
+    Base resource class providing common functionality for encryption and decryption resources.
+    """
 
-        Attributes:
-            ERROR_TEXT_NOT_PROVIDED (str): Error message for missing text.
-            ERROR_TOKEN_NOT_PROVIDED (str): Error message for missing token.
-        """
     ERROR_TEXT_NOT_PROVIDED = "Text not provided."
     ERROR_TOKEN_NOT_PROVIDED = "Token not provided."
 
     def process_text(self, text, token, operation):
         """
-                Process the provided text using the given operation and token.
+        Process the text using the provided operation (encrypt or decrypt).
 
-                Args:
-                    text (str): The text to process.
-                    token (str): The encryption/decryption token.
-                    operation (function): The encryption/decryption function.
+        Args:
+            text (str): The text to be processed.
+            token (str): The token used for encryption or decryption.
+            operation (callable): The encryption or decryption operation.
 
-                Returns:
-                    str: The result of the operation.
+        Returns:
+            str: The processed text.
 
-                Raises:
-                    HTTPException: If text or token is missing, or if an internal server error occurs.
-                """
+        Raises:
+            ValueError: If an error occurs during the processing.
+        """
         if not text:
             self.abort_with_error(self.ERROR_TEXT_NOT_PROVIDED)
 
@@ -46,31 +44,34 @@ class BaseResource(Resource):
 
     def abort_with_error(self, message, status_code=400):
         """
-                Abort the request with a custom error message and status code.
+        Abort the request with a JSON response containing the error message.
 
-                Args:
-                    message (str): The error message.
-                    status_code (int): The HTTP status code.
+        Args:
+            message (str): The error message.
+            status_code (int): The HTTP status code for the response.
 
-                Raises:
-                    HTTPException: With the specified error message and status code.
-                """
-        abort(status_code, {'message': message})
+        Raises:
+            HTTPException: Always raises an exception to stop further request processing.
+        """
+        response = make_response(jsonify({'error': message}), status_code)
+        abort(response)
 
     def parse_args(self):
         """
-                Parse and retrieve request arguments.
+        Parse and validate the request arguments.
 
-                Returns:
-                    Namespace: Parsed arguments.
+        Returns:
+            argparse.Namespace: The parsed arguments.
 
-                Raises:
-                    HTTPException: If there is an error parsing the arguments.
-                """
+        Raises:
+            HTTPException: If there is an error parsing the arguments.
+        """
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('text', type=str, required=True, help='Text is required.')
             parser.add_argument('token', type=str, required=True, help='Token is required.')
-            return parser.parse_args()
-        except Exception as e:
-            self.abort_with_error(f"Error parsing arguments: {str(e)}", 400)
+            args = parser.parse_args(req=request)
+            return args
+        except HTTPException as e:
+            self.abort_with_error(f"Error parsing arguments: {str(e.description)}", e.code)
+            return None
