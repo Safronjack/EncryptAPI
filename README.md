@@ -16,21 +16,18 @@ Installation
 
 Clone the repository:
 
-bash
 ```bash
 git clone https://github.com/your-username/flask-encryption-api.git
 ```
 
 Change into the project directory:
 
-bash
 ```bash
 cd flask-encryption-api
 ```
 
 Install the required dependencies:
 
-bash
 ```bash
 pip install -r requirements.txt
 ```
@@ -39,7 +36,6 @@ Usage
 
 Run the Flask application:
 
-bash
 ```bash
 python run.py
 ```
@@ -77,19 +73,16 @@ cryptography
 Установка\
 Клонируйте репозиторий:
 
-bash
 ```bash
 git clone https://github.com/your-username/flask-encryption-api.git
 ```
 Перейдите в каталог проекта:
 
-bash
 ```bash
 cd flask-encryption-api
 ```
 Установите необходимые зависимости:
 
-bash
 ```bash
 pip install -r requirements.txt
 ```
@@ -97,7 +90,6 @@ pip install -r requirements.txt
 
 Запустите приложение Flask:
 
-bash
 ```bash
 python run.py
 ```
