@@ -33,12 +33,17 @@ Install the required dependencies:
 pip install -r requirements.txt
 ```
 
+ATTENTION!
+
+In the /app/ reference you must add cert.pem and key.pem.
+Currently self-signed certificates are used.
+
 Usage
 
 Run the Flask application:
 
 ```bash
-python run.py
+python main.py
 ```
 Access the API endpoints:
 
@@ -87,12 +92,17 @@ cd flask-encryption-api
 ```bash
 pip install -r requirements.txt
 ```
+ВНИМАНИЕ!
+
+В папку /app/ необходимо добавить cert.pem и key.pem  
+На данный момент используются самоподписанные сертификаты  
+
 Использование
 
 Запустите приложение Flask:
 
 ```bash
-python run.py
+python main.py
 ```
 Обратитесь к конечным точкам API:
 
