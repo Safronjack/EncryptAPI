@@ -10,7 +10,8 @@ Prerequisites\
 Python 3.x\
 Flask\
 Flask-RESTful\
-cryptography\
+cryptography
+
 Installation
 
 
