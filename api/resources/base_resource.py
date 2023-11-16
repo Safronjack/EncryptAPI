@@ -2,15 +2,34 @@
 from flask import abort
 from flask_restful import Resource, reqparse
 from cryptography.fernet import Fernet
-from api.models.log_entry import LogEntry
-from app.app import db  # Импортируем db из приложения
 
 
 class BaseResource(Resource):
+    """
+        Base class for API resources providing common functionality.
+
+        Attributes:
+            ERROR_TEXT_NOT_PROVIDED (str): Error message for missing text.
+            ERROR_TOKEN_NOT_PROVIDED (str): Error message for missing token.
+        """
     ERROR_TEXT_NOT_PROVIDED = "Text not provided."
     ERROR_TOKEN_NOT_PROVIDED = "Token not provided."
 
     def process_text(self, text, token, operation):
+        """
+                Process the provided text using the given operation and token.
+
+                Args:
+                    text (str): The text to process.
+                    token (str): The encryption/decryption token.
+                    operation (function): The encryption/decryption function.
+
+                Returns:
+                    str: The result of the operation.
+
+                Raises:
+                    HTTPException: If text or token is missing, or if an internal server error occurs.
+                """
         if not text:
             self.abort_with_error(self.ERROR_TEXT_NOT_PROVIDED)
 
@@ -23,24 +42,31 @@ class BaseResource(Resource):
             return result_text.decode()
         except Exception as e:
             error_message = f"Internal Server Error: {str(e)}"
-            self.log_error(error_message)
             self.abort_with_error(error_message, 500)
 
-    def log_info(self, message):
-        log_entry = LogEntry(message=message, level='INFO')
-        db.session.add(log_entry)
-        db.session.commit()
-
-    def log_error(self, message):
-        log_entry = LogEntry(message=message, level='ERROR')
-        db.session.add(log_entry)
-        db.session.commit()
-
     def abort_with_error(self, message, status_code=400):
-        self.log_error(message)
+        """
+                Abort the request with a custom error message and status code.
+
+                Args:
+                    message (str): The error message.
+                    status_code (int): The HTTP status code.
+
+                Raises:
+                    HTTPException: With the specified error message and status code.
+                """
         abort(status_code, {'message': message})
 
     def parse_args(self):
+        """
+                Parse and retrieve request arguments.
+
+                Returns:
+                    Namespace: Parsed arguments.
+
+                Raises:
+                    HTTPException: If there is an error parsing the arguments.
+                """
         try:
             parser = reqparse.RequestParser()
             parser.add_argument('text', type=str, required=True, help='Text is required.')

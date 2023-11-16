@@ -1,4 +1,4 @@
-/your_project
+/Project
 |-- /api
 |   |-- __init__.py
 |   |-- /resources
@@ -7,15 +7,10 @@
 |   |   |-- token_resource.py
 |   |   |-- encryption_resource.py
 |   |   |-- decryption_resource.py
-|   |   |-- log_resource.py
-|   |-- /models
-|   |   |-- __init__.py
-|   |   |-- models.py
 |-- /app
 |   |-- __init__.py
 |   |-- app.py
 |-- config.py
-|-- /logs
+|-- main.py
 |-- /tests
-|-- /venv
-|-- /your_database.db
+|-- README.md
